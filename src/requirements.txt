@@ -1,0 +1,4 @@
+-r ./requirements/production.txt
+# Consider pinning the package versions from the *.txt files in the requirements folder.
+# They are not pinned here to take the latest versions of the packages for new projects.
+# Once you've established a project, using a pinned version of your packages is advised.
