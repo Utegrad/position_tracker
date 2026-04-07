@@ -2,3 +2,5 @@ Django
 django-environ
 psycopg2-binary
 argon2-cffi
+pydantic~=2.12
+
