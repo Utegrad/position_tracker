@@ -21,6 +21,26 @@ class TestBasicListingModelsAndViews:
         listing = Listing.objects.get(ticker="FOO")
         assert listing.name == "Foo"
 
+    def test_listing_str_returns_ticker_and_name(self):
+        listing = Listing(name="Foo", ticker="FOO")
+        assert str(listing) == "FOO [Foo]"
+
+    def test_create_listing_view_rejects_missing_required_fields(self, client):
+        response = client.post(reverse("listings:create"), data={"ticker": "FOO"})
+        assert response.status_code == 200
+        assert Listing.objects.filter(ticker="FOO").exists() is False
+
+    def test_create_listing_view_rejects_duplicate_ticker(self, client):
+        Listing.objects.create(name="Foo", ticker="FOO")
+
+        response = client.post(
+            reverse("listings:create"),
+            data={"name": "Another Foo", "ticker": "FOO"},
+        )
+
+        assert response.status_code == 200
+        assert Listing.objects.filter(ticker="FOO").count() == 1
+
     def test_update_listing_view(self, client):
         _ = Listing.objects.create(name="Foo", ticker="FOO")
         new_name = "Foo & Sons"
@@ -60,6 +80,30 @@ class TestBasicListingModelsAndViews:
         assertContains(response, listing1, status_code=200)
         assertContains(response, listing2, status_code=200)
 
+    def test_listing_list_view_shows_empty_page_when_no_listings(self, client):
+        response = client.get(reverse("listings:listings"))
+        assert response.status_code == 200
+
+    def test_listing_detail_view_returns_404_for_missing_listing(self, client):
+        response = client.get(reverse("listings:detail", kwargs={"ticker": "MISSING"}))
+        assert response.status_code == 404
+
+    def test_listing_update_view_returns_404_for_missing_listing(self, client):
+        response = client.get(reverse("listings:update", kwargs={"ticker": "MISSING"}))
+        assert response.status_code == 404
+
+    def test_listing_delete_view_returns_404_for_missing_listing(self, client):
+        response = client.post(reverse("listings:delete", kwargs={"ticker": "MISSING"}))
+        assert response.status_code == 404
+
+    def test_listing_list_view_includes_detail_update_delete_links(self, client):
+        listing = Listing.objects.create(name="Foo", ticker="FOO")
+        response = client.get(reverse("listings:listings"))
+
+        assertContains(response, reverse("listings:detail", kwargs={"ticker": listing.ticker}))
+        assertContains(response, reverse("listings:update", kwargs={"ticker": listing.ticker}))
+        assertContains(response, reverse("listings:delete", kwargs={"ticker": listing.ticker}))
+
     @pytest.mark.parametrize(
         ("ticker",),
         [
@@ -76,3 +120,11 @@ class TestBasicListingModelsAndViews:
         url = reverse("listings:detail", kwargs={"ticker": listing.ticker})
         response = client.get(url)
         assertContains(response, listing, status_code=200)
+
+    def test_listing_get_absolute_url_uses_ticker(self):
+        listing = Listing(name="Foo", ticker="FOO")
+        assert listing.get_absolute_url() == reverse("listings:detail", args=["FOO"])
+
+    def test_listing_original_ticker_decodes_encoded_value(self):
+        listing = Listing(name="Foo", ticker="FOO%2FA")
+        assert listing.original_ticker == "FOO/A"
