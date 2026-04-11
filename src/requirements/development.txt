@@ -1,5 +1,9 @@
 -r ./base.txt
 pytest
+pytest-django
+pytest-cov
 black
 faker
 django-debug-toolbar
+coverage
+django-coverage-plugin

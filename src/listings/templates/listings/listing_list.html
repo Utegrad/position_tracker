@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'listings/css/base.css' %}">
+{% endblock extra_css %}
+{% block title %}Listings{% endblock title %}
+
+{% block body_content %}
+    <p>
+        <a href="{% url 'listings:create' %}">Create a listing</a>
+    </p>
+{% if listing_list %}
+{% for listing in listing_list %}
+    <div>
+    <a href="{% url 'listings:detail' ticker=listing.ticker %}">{{ listing }}</a>
+    <a href="{% url 'listings:update' ticker=listing.ticker %}">Update</a>
+    <a href="{% url 'listings:delete' ticker=listing.ticker %}">Delete</a>
+    </div>
+{% endfor %}
+{% else %}
+{% endif %}
+{% endblock body_content %}

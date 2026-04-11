@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'listings/css/base.css' %}">
+{% endblock extra_css %}
+{% block title %}Listings{% endblock title %}
+{%  block body_content %}
+{% if listing %}
+    <div>
+        <p>{{ listing }}</p>
+        <p><a href="{% url 'listings:update' ticker=listing.ticker %}">Update</a> </p>
+        <p><a href="{% url 'listings:delete' ticker=listing.ticker %}">Delete</a> </p>
+    </div>
+{% endif %}
+{% endblock body_content %}
