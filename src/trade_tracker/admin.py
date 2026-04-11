@@ -1,32 +1,6 @@
 from django.contrib import admin
 
-from .models.listing_upload import ListingUpload
 from .models.listing import Listing
-
-
-@admin.register(ListingUpload)
-class ListingsUploadAdmin(admin.ModelAdmin):
-    list_display = (
-        "trimmed_friendly_file_name",
-        "trimmed_description",
-        "imported",
-    )
-    search_fields = (
-        "listings_file",
-        "description",
-    )
-    readonly_fields = (
-        "latest_task_status",
-        "imported",
-        "latest_task_id",
-    )
-    fields = (
-        "listings_file",
-        "description",
-        "imported",
-        "latest_task_id",
-        "latest_task_status",
-    )
 
 
 @admin.register(Listing)
