@@ -2,8 +2,8 @@ import pytest
 from django.urls import reverse
 from pytest_django.asserts import assertContains
 
-from ..models.listing import Listing
-from ..forms import ListingForm
+from listings.models.listing import Listing
+from listings.forms import ListingForm
 
 
 @pytest.mark.django_db
