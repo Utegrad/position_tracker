@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 from django.urls import reverse
-from django_celery_results.models import TaskResult
+from django.tasks import TaskResult
 
 from . import TimeStampedObjectModel
 
@@ -29,7 +29,7 @@ class ListingUpload(TimeStampedObjectModel):
     @property
     def latest_task_status(self):
         try:
-            task_result = TaskResult.objects.get(task_id=self.latest_task_id)
+            task_result = models.OneToOneField(TaskResult, on_delete=models.SET_NULL, null=True)
             date_done = task_result.date_done.isoformat()
             latest_task_status_str = (
                 f"{self.latest_task_id}: {task_result.status} at {date_done}"
