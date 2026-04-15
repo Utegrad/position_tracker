@@ -100,9 +100,15 @@ class TestBasicListingModelsAndViews:
         listing = Listing.objects.create(name="Foo", ticker="FOO")
         response = client.get(reverse("listings:listings"))
 
-        assertContains(response, reverse("listings:detail", kwargs={"ticker": listing.ticker}))
-        assertContains(response, reverse("listings:update", kwargs={"ticker": listing.ticker}))
-        assertContains(response, reverse("listings:delete", kwargs={"ticker": listing.ticker}))
+        assertContains(
+            response, reverse("listings:detail", kwargs={"ticker": listing.ticker})
+        )
+        assertContains(
+            response, reverse("listings:update", kwargs={"ticker": listing.ticker})
+        )
+        assertContains(
+            response, reverse("listings:delete", kwargs={"ticker": listing.ticker})
+        )
 
     @pytest.mark.parametrize(
         ("ticker",),
