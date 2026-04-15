@@ -14,7 +14,7 @@ class ListingUpload(TimeStampedObjectModel):
 
     listing_file = models.FileField(upload_to="uploads/", blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    uuid = models.UUIDField(primary_key=True, editable=False, unique=True)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     imported = models.BooleanField(
         default=False,
         help_text="Marked True when the task has processed this file to import listings data.",

@@ -7,3 +7,7 @@ class TimeStampedObjectModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+from .listing import Listing
+from .listing_upload import ListingUpload
